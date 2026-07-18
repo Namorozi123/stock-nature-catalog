@@ -135,7 +135,7 @@ const L18={
   and:"И (все)",or:"ИЛИ (любое)",hSize:"Крупность плана",reset:"Сбросить фильтры",
   found:"Найдено кадров",total:"суммарно",statP:"кадров",statV:"роликов",statH:"ч",h:"ч",m:"мин",s:"с",
   empty:"В выборке нет кадров.",fname:"кадры_выборка",
-  hdr:["№","Ролик","№ видео","Регион","Страна","Сезон","План №","Начало, с","Конец, с","Длительность, с","Тайм-код","Крупность","Теги","Животные/птицы"],
+  hdr:["№","Ролик","№ видео","Регион","Страна","Сезон","План №","Длительность, с","Тайм-код","Крупность","Теги","Животные/птицы"],
   cats:null,sizes:null,seasons:null},
  en:{brand:"Shot catalog",all:"all regions",ph:"Search shots: clip, subject, species…",
   srt:{oId:"Default order",oDurd:"Longest first",oDura:"Shortest first",oSize:"By shot size",oVideo:"By clip"},
@@ -144,7 +144,7 @@ const L18={
   and:"AND (all)",or:"OR (any)",hSize:"Shot size",reset:"Reset filters",
   found:"Shots found",total:"total",statP:"shots",statV:"clips",statH:"h",h:"h",m:"min",s:"s",
   empty:"No shots in the selection.",fname:"shots_selection",
-  hdr:["#","Clip","Clip #","Region","Country","Season","Shot #","Start, s","End, s","Duration, s","Timecode","Shot size","Tags","Animals/birds"],
+  hdr:["#","Clip","Clip #","Region","Country","Season","Shot #","Duration, s","Timecode","Shot size","Tags","Animals/birds"],
   cats:{"коптер":"Aerial (drone)","горы":"Mountains","река":"Rivers","озеро":"Lakes","лес":"Forest","море":"Sea / ocean","водопад":"Waterfalls","закат":"Sunsets / sunrises","пустыня":"Desert","подвода":"Underwater","цветы":"Flowers","животные":"Animals","птицы":"Birds"},
   sizes:{"Дальний":"Extreme long","Общий":"Long","Средний":"Medium","Крупный":"Close-up","Деталь":"Extreme close-up"},
   seasons:{"Зима":"Winter","Весна":"Spring","Лето":"Summer","Осень":"Autumn"}}
@@ -291,7 +291,7 @@ function exportXls(){
     const tags=p.tags.map(k=>dCat(k)).join(", ");
     const sp=[p.animal||"",p.bird||""].filter(Boolean).join(", ");
     const cells=[i+1,p.vname,p.vid,p.region,p.country,dSeason(p.season),p.sn,
-                 p.t0,p.t1,Math.round(p.dur),tc(p.t0)+"-"+tc(p.t1),dSize(p.size),tags,sp];
+                 Math.round(p.dur),tc(p.t0)+"-"+tc(p.t1),dSize(p.size),tags,sp];
     t+='<tr>'+cells.map(c=>'<td>'+esc(String(c))+'</td>').join("")+'</tr>';
   });
   t+='</table>';

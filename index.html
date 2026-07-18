@@ -16,6 +16,8 @@ select,input,button{font-family:inherit;font-size:14px}
 #sortSel{padding:6px 8px;border-radius:6px;border:none;background:#fff;color:var(--ink)}
 #expBtn{padding:7px 12px;border-radius:6px;border:none;background:#1a7f4b;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
 #expBtn:hover{background:#166b3f}
+#langBtn{padding:7px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;font-weight:700;cursor:pointer}
+#langBtn:hover{background:rgba(255,255,255,.15)}
 .search{flex:1;min-width:200px;position:relative}
 .search input{width:100%;padding:9px 12px 9px 34px;border-radius:8px;border:none;outline:none}
 .search svg{position:absolute;left:10px;top:9px;width:18px;height:18px;fill:var(--mut)}
@@ -74,35 +76,36 @@ main{flex:1;min-width:0}
 <body>
 <header>
   <div class="hrow">
-    <div class="brand">Каталог планов<small id="subTitle">—</small></div>
+    <div class="brand"><span id="brandT">Каталог планов</span><small id="subTitle">—</small></div>
     <div class="search">
       <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
       <input id="q" type="search" placeholder="Поиск планов: ролик, объект, вид…" autocomplete="off">
     </div>
     <select id="sortSel" title="Сортировка">
-      <option value="id">По порядку</option>
-      <option value="durd">Дольше сначала</option>
-      <option value="dura">Короче сначала</option>
-      <option value="size">По крупности</option>
-      <option value="video">По ролику</option>
+      <option value="id" id="oId">По порядку</option>
+      <option value="durd" id="oDurd">Дольше сначала</option>
+      <option value="dura" id="oDura">Короче сначала</option>
+      <option value="size" id="oSize">По крупности</option>
+      <option value="video" id="oVideo">По ролику</option>
     </select>
-    <button id="expBtn" title="Выгрузить список роликов текущей выборки в Excel (без фото)">⬇ Excel</button>
+    <button id="langBtn" title="Switch interface to English">EN</button>
+    <button id="expBtn" title="Выгрузить кадры текущей выборки в Excel (без фото)">⬇ Excel</button>
     <div class="stats" id="stats"></div>
   </div>
 </header>
 <div class="layout">
   <button class="ftog" id="ftog">Фильтры ▾</button>
   <aside id="filters">
-    <h3>Регион</h3><div class="fg" id="fRegion"></div>
-    <h3>Страна</h3><div class="fg" id="fCountry"></div>
-    <h3>Сезон</h3><div class="fg" id="fSeason"></div>
-    <h3>Что в кадре</h3>
-    <div class="modeRow"><span class="lbl">режим:</span>
+    <h3 id="hRegion">Регион</h3><div class="fg" id="fRegion"></div>
+    <h3 id="hCountry">Страна</h3><div class="fg" id="fCountry"></div>
+    <h3 id="hSeason">Сезон</h3><div class="fg" id="fSeason"></div>
+    <h3 id="hFrame">Что в кадре</h3>
+    <div class="modeRow"><span class="lbl" id="hMode">режим:</span>
       <span class="mode on" data-mode="and" id="mAnd">И (все)</span>
       <span class="mode" data-mode="or" id="mOr">ИЛИ (любое)</span>
     </div>
     <div class="fg" id="fCats"></div>
-    <h3>Крупность плана</h3><div class="fg" id="fSizes"></div>
+    <h3 id="hSize">Крупность плана</h3><div class="fg" id="fSizes"></div>
     <button class="reset" id="reset">Сбросить фильтры</button>
   </aside>
   <main>
@@ -124,11 +127,56 @@ const SIZE_COLOR={"Дальний":"#90a4ae","Общий":"#42a5f5","Средн�
 const SEASONS=["Зима","Весна","Лето","Осень"];
 const SEASON_COLOR={"Зима":"#dbeeff","Весна":"#dcf5dc","Лето":"#fff3c4","Осень":"#ffe0c2"};
 let CAT=null,PLANS=[],filtered=[],shown=0;const PAGE=250;
-let state={q:"",regions:new Set(),countries:new Set(),seasons:new Set(),cats:new Set(),sizes:new Set(),mode:"and",sort:"id"};
+const L18={
+ ru:{brand:"Каталог планов",all:"все регионы",ph:"Поиск планов: ролик, объект, вид…",
+  srt:{oId:"По порядку",oDurd:"Дольше сначала",oDura:"Короче сначала",oSize:"По крупности",oVideo:"По ролику"},
+  exp:"⬇ Excel",expT:"Выгрузить кадры текущей выборки в Excel (без фото)",lang:"EN",langT:"Switch interface to English",
+  ftog:"Фильтры ▾",hRegion:"Регион",hCountry:"Страна",hSeason:"Сезон",hFrame:"Что в кадре",hMode:"режим:",
+  and:"И (все)",or:"ИЛИ (любое)",hSize:"Крупность плана",reset:"Сбросить фильтры",
+  found:"Найдено кадров",total:"суммарно",statP:"кадров",statV:"роликов",statH:"ч",h:"ч",m:"мин",s:"с",
+  empty:"В выборке нет кадров.",fname:"кадры_выборка",
+  hdr:["№","Ролик","№ видео","Регион","Страна","Сезон","План №","Начало, с","Конец, с","Длительность, с","Тайм-код","Крупность","Теги","Животные/птицы"],
+  cats:null,sizes:null,seasons:null},
+ en:{brand:"Shot catalog",all:"all regions",ph:"Search shots: clip, subject, species…",
+  srt:{oId:"Default order",oDurd:"Longest first",oDura:"Shortest first",oSize:"By shot size",oVideo:"By clip"},
+  exp:"⬇ Excel",expT:"Export current selection to Excel (no photos)",lang:"RU",langT:"Вернуть русский интерфейс",
+  ftog:"Filters ▾",hRegion:"Region",hCountry:"Country",hSeason:"Season",hFrame:"What is in frame",hMode:"mode:",
+  and:"AND (all)",or:"OR (any)",hSize:"Shot size",reset:"Reset filters",
+  found:"Shots found",total:"total",statP:"shots",statV:"clips",statH:"h",h:"h",m:"min",s:"s",
+  empty:"No shots in the selection.",fname:"shots_selection",
+  hdr:["#","Clip","Clip #","Region","Country","Season","Shot #","Start, s","End, s","Duration, s","Timecode","Shot size","Tags","Animals/birds"],
+  cats:{"коптер":"Aerial (drone)","горы":"Mountains","река":"Rivers","озеро":"Lakes","лес":"Forest","море":"Sea / ocean","водопад":"Waterfalls","закат":"Sunsets / sunrises","пустыня":"Desert","подвода":"Underwater","цветы":"Flowers","животные":"Animals","птицы":"Birds"},
+  sizes:{"Дальний":"Extreme long","Общий":"Long","Средний":"Medium","Крупный":"Close-up","Деталь":"Extreme close-up"},
+  seasons:{"Зима":"Winter","Весна":"Spring","Лето":"Summer","Осень":"Autumn"}}
+};
+let TOTV=0,TOTD=0;
+function LG(){return L18[state.lang]||L18.ru;}
+function dCat(k){const d=LG().cats;return (d&&d[k])||CATDISP[k]||k;}
+function dSize(x){const d=LG().sizes;return (d&&d[x])||x;}
+function dSeason(x){const d=LG().seasons;return (d&&d[x])||x;}
+function tc(sec){sec=Math.max(0,Math.round(sec));const m=Math.floor(sec/60),r=sec%60;return m+":"+String(r).padStart(2,"0");}
+function setTxt(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
+function applyLang(){
+  const L=LG();
+  setTxt("brandT",L.brand);setTxt("subTitle",L.all);
+  const q=document.getElementById("q");if(q)q.placeholder=L.ph;
+  for(const k in L.srt)setTxt(k,L.srt[k]);
+  const eb=document.getElementById("expBtn");if(eb){eb.textContent=L.exp;eb.title=L.expT;}
+  const lb=document.getElementById("langBtn");if(lb){lb.textContent=L.lang;lb.title=L.langT;}
+  setTxt("ftog",L.ftog);setTxt("hRegion",L.hRegion);setTxt("hCountry",L.hCountry);setTxt("hSeason",L.hSeason);
+  setTxt("hFrame",L.hFrame);setTxt("hMode",L.hMode);setTxt("mAnd",L.and);setTxt("mOr",L.or);
+  setTxt("hSize",L.hSize);setTxt("reset",L.reset);
+  document.documentElement.lang=state.lang;
+  updStats();buildFilters();render();
+}
+function updStats(){const L=LG();const e=document.getElementById("stats");
+  if(e)e.textContent=PLANS.length+" "+L.statP+" · "+TOTV+" "+L.statV+" · "+(TOTD/3600).toFixed(1)+" "+L.statH;}
+
+let state={q:"",regions:new Set(),countries:new Set(),seasons:new Set(),cats:new Set(),sizes:new Set(),mode:"and",sort:"id",lang:"ru"};
 function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 function hl(s){s=esc(s);const q=state.q.trim();if(!q)return s;try{const rx=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig");return s.replace(rx,"<mark>$1</mark>");}catch(e){return s;}}
 function fmtDur(sec){const m=Math.floor(sec/60),s=Math.round(sec%60);return m?(m+":"+String(s).padStart(2,"0")):(Math.round(sec)+"с");}
-function fmtTotal(sec){sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;const p=[];if(h)p.push(h+" ч");if(m)p.push(m+" мин");p.push(s+" с");return p.join(" ");}
+function fmtTotal(sec){const L=LG();sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;const p=[];if(h)p.push(h+" "+L.h);if(m)p.push(m+" "+L.m);p.push(s+" "+L.s);return p.join(" ");}
 function loadCatalogs(){
   const list=window.SHOTS_MANIFEST||[];
   if(!list.length){document.getElementById("grid").innerHTML='<div class="empty">Нет данных.</div>';return;}
@@ -143,6 +191,7 @@ function bindUI(list){
   document.getElementById("mOr").addEventListener("click",()=>setMode("or"));
   document.getElementById("ftog").addEventListener("click",()=>document.getElementById("filters").classList.toggle("collapsed"));
   document.getElementById("expBtn").addEventListener("click",exportXls);
+  document.getElementById("langBtn").addEventListener("click",function(){state.lang=(state.lang==="ru"?"en":"ru");applyLang();});
   const io=new IntersectionObserver(es=>{if(es[0].isIntersecting)more();},{rootMargin:"600px"});
   io.observe(document.getElementById("sentinel"));
   if(window.innerWidth<=860)document.getElementById("filters").classList.add("collapsed");
@@ -155,11 +204,11 @@ function buildCombined(){
   let plans=[],videos=0,dur=0;
   ids.forEach(id=>{const c=cats[id];(c.plans||[]).forEach(p=>plans.push(p));videos+=c.videos||0;dur+=c.dur||0;});
   CAT={title:"все регионы",plans:plans,videos:videos,dur:dur};PLANS=plans;
-  document.getElementById("subTitle").textContent="все регионы";
+  document.getElementById("subTitle").textContent=LG().all;
   PLANS.forEach(p=>{const parts=[p.vname,p.season,p.region,p.country,p.animal||"",p.bird||"",p.size];p.tags.forEach(k=>parts.push(CATDISP[k]||k));p._s=parts.join(" ").toLowerCase();});
   state.regions.clear();state.countries.clear();state.seasons.clear();state.cats.clear();state.sizes.clear();
   buildFilters();render();
-  document.getElementById("stats").textContent=PLANS.length+" планов · "+videos+" роликов · "+(dur/3600).toFixed(1)+" ч";
+  TOTV=videos;TOTD=dur;updStats();
 }
 function cntP(fn){let n=0;for(const p of PLANS)if(fn(p))n++;return n;}
 function buildFilters(){
@@ -170,11 +219,11 @@ function buildFilters(){
   const cos=[...new Set(PLANS.map(p=>p.country))].sort((a,b)=>a.localeCompare(b,"ru"));
   cos.forEach(co=>{const n=cntP(p=>p.country===co);if(n)fCo.appendChild(mkTog(co,n,state.countries,co));});
   const fS=document.getElementById("fSeason");fS.innerHTML="";
-  SEASONS.forEach(s=>{const n=cntP(p=>p.season===s);if(n)fS.appendChild(mkTog(s,n,state.seasons,s));});
+  SEASONS.forEach(s=>{const n=cntP(p=>p.season===s);if(n)fS.appendChild(mkTog(dSeason(s),n,state.seasons,s));});
   const fC=document.getElementById("fCats");fC.innerHTML="";
-  CATS.forEach(([k,lab])=>{const n=cntP(p=>p.tags.indexOf(k)>=0);if(n)fC.appendChild(mkTog(lab,n,state.cats,k));});
+  CATS.forEach(([k,lab])=>{const n=cntP(p=>p.tags.indexOf(k)>=0);if(n)fC.appendChild(mkTog(dCat(k),n,state.cats,k));});
   const fZ=document.getElementById("fSizes");fZ.innerHTML="";
-  SIZE_ORDER.forEach(s=>{const n=cntP(p=>p.size===s);if(n)fZ.appendChild(mkTog(s,n,state.sizes,s));});
+  SIZE_ORDER.forEach(s=>{const n=cntP(p=>p.size===s);if(n)fZ.appendChild(mkTog(dSize(s),n,state.sizes,s));});
 }
 function mkTog(label,n,set,key){const b=document.createElement("span");b.className="tog"+(set.has(key)?" on":"");b.innerHTML=esc(label)+'<span class="c">'+n+'</span>';b.addEventListener("click",()=>{set.has(key)?set.delete(key):set.add(key);b.classList.toggle("on");render();});return b;}
 function match(p){
@@ -196,13 +245,13 @@ function sortP(a){const s=state.sort,arr=a.slice();
   else if(s==="video")arr.sort((x,y)=>x.vname.localeCompare(y.vname,"ru")||x.gid-y.gid);
   else arr.sort((x,y)=>x.gid-y.gid);
   return arr;}
-function chipsHTML(p){return p.tags.map(k=>'<span class="chip" style="--c:'+(CATCOLOR[k]||"#888")+'">'+esc(CATDISP[k]||k)+'</span>').join("");}
+function chipsHTML(p){return p.tags.map(k=>'<span class="chip" style="--c:'+(CATCOLOR[k]||"#888")+'">'+esc(dCat(k))+'</span>').join("");}
 function cellHTML(p,i){
   const sp=(p.bird?'<div class="sp">🐦 '+esc(p.bird)+'</div>':'')+(p.animal?'<div class="sp">🐾 '+esc(p.animal)+'</div>':'');
   return '<figure class="cell" data-i="'+i+'" style="--sc:'+(SEASON_COLOR[p.season]||"#ccc")+'">'+
     '<img loading="lazy" src="'+esc(p.img)+'" alt="">'+
     '<figcaption class="cap">'+
-      '<div class="capr"><span class="sz" style="color:'+(SIZE_COLOR[p.size]||"#333")+'">'+esc(p.size)+'</span>'+
+      '<div class="capr"><span class="sz" style="color:'+(SIZE_COLOR[p.size]||"#333")+'">'+esc(dSize(p.size))+'</span>'+
       '<span class="tm">'+p.t0+'–'+p.t1+'с</span><span class="dur">'+fmtDur(p.dur)+'</span></div>'+
       '<div class="tgs">'+chipsHTML(p)+'</div>'+sp+
       '<div class="vn">📍 '+esc(p.region)+' · #'+p.vid+' '+hl(p.vname)+'</div>'+
@@ -211,7 +260,7 @@ function cellHTML(p,i){
 function render(){
   if(!CAT)return;filtered=sortP(PLANS.filter(match));shown=0;
   let _sum=0;for(const _p of filtered)_sum+=_p.dur;
-  document.getElementById("count").innerHTML="Найдено планов: <b>"+filtered.length+"</b> · суммарно <b>"+fmtTotal(_sum)+"</b> ("+Math.round(_sum)+" с)";
+  const L=LG();document.getElementById("count").innerHTML=L.found+": <b>"+filtered.length+"</b> · "+L.total+" <b>"+fmtTotal(_sum)+"</b> ("+Math.round(_sum)+" "+L.s+")";
   document.getElementById("grid").innerHTML="";more();
 }
 function more(){
@@ -235,30 +284,21 @@ function openLB(i){
 }
 function closeLB(){document.getElementById("lb").classList.remove("on");}
 function exportXls(){
-  if(!filtered||!filtered.length){alert("В выборке нет роликов.");return;}
-  const map=new Map();
-  filtered.forEach(p=>{
-    const key=p.region+"||"+p.vid+"||"+p.vname;
-    let v=map.get(key);
-    if(!v){v={region:p.region,country:p.country,vid:p.vid,vname:p.vname,seasons:new Set(),plans:0,dur:0,sizes:new Set(),tags:new Set(),sp:new Set()};map.set(key,v);}
-    v.seasons.add(p.season);v.plans++;v.dur+=p.dur;v.sizes.add(p.size);
-    p.tags.forEach(t=>v.tags.add(CATDISP[t]||t));
-    if(p.animal)v.sp.add(p.animal);if(p.bird)v.sp.add(p.bird);
-  });
-  const rows=[...map.values()].sort((a,b)=>a.region.localeCompare(b.region,"ru")||a.vname.localeCompare(b.vname,"ru"));
-  const head=["№","Регион","Страна","№ видео","Ролик","Сезон(ы)","Планов","Хрон., с","Крупности","Теги","Животные/птицы"];
-  let t='<table border="1"><tr>'+head.map(h=>'<th>'+esc(h)+'</th>').join("")+'</tr>';
-  rows.forEach((v,i)=>{
-    const sizes=SIZE_ORDER.filter(x=>v.sizes.has(x)).join(", ");
-    const seas=SEASONS.filter(x=>v.seasons.has(x)).join(", ");
-    const cells=[i+1,v.region,v.country,v.vid,v.vname,seas,v.plans,Math.round(v.dur),sizes,[...v.tags].join(", "),[...v.sp].join(", ")];
+  const L=LG();
+  if(!filtered||!filtered.length){alert(L.empty);return;}
+  let t='<table border="1"><tr>'+L.hdr.map(h=>'<th>'+esc(h)+'</th>').join("")+'</tr>';
+  filtered.forEach(function(p,i){
+    const tags=p.tags.map(k=>dCat(k)).join(", ");
+    const sp=[p.animal||"",p.bird||""].filter(Boolean).join(", ");
+    const cells=[i+1,p.vname,p.vid,p.region,p.country,dSeason(p.season),p.sn,
+                 p.t0,p.t1,Math.round(p.dur),tc(p.t0)+"-"+tc(p.t1),dSize(p.size),tags,sp];
     t+='<tr>'+cells.map(c=>'<td>'+esc(String(c))+'</td>').join("")+'</tr>';
   });
   t+='</table>';
-  const doc='<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Ролики</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>'+t+'</body></html>';
-  const blob=new Blob(["﻿"+doc],{type:"application/vnd.ms-excel"});
+  const doc='<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Shots</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>'+t+'</body></html>';
+  const blob=new Blob(["\ufeff"+doc],{type:"application/vnd.ms-excel"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="ролики_выборка_"+rows.length+".xls";document.body.appendChild(a);a.click();
+  a.download=L.fname+"_"+filtered.length+".xls";document.body.appendChild(a);a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
 }
 loadCatalogs();

@@ -3,23 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Каталог планов</title>
+<title>UTV media — каталог кадров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4f6f9;--card:#fff;--ink:#1c2733;--mut:#6b7a8d;--accent:#1f4e78;--accent2:#2e75b6;--mark:#ffe58a}
+:root{--bg:#f6f7f8;--card:#fff;--ink:#1a1a1a;--mut:#7a7a7a;--accent:#f15a24;--accent2:#f57c3c;--mark:#ffe0b3}
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15.5px}
-header{position:sticky;top:0;z-index:20;background:var(--accent);color:#fff;padding:10px 16px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+body{margin:0;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15.5px}
+header{position:sticky;top:0;z-index:20;background:#fff;color:var(--ink);padding:11px 20px;border-top:3px solid var(--accent);border-bottom:1px solid #ededed;box-shadow:0 1px 8px rgba(0,0,0,.05)}
 .hrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .brand{font-size:17px;font-weight:700;white-space:nowrap}
 .brand small{display:block;font-size:11px;font-weight:400;opacity:.85}
 select,input,button{font-family:inherit;font-size:14px}
-#sortSel{padding:6px 8px;border-radius:6px;border:none;background:#fff;color:var(--ink)}
-#expBtn{padding:7px 12px;border-radius:6px;border:none;background:#1a7f4b;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
-#expBtn:hover{background:#166b3f}
-#langBtn{padding:7px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;font-weight:700;cursor:pointer}
+#sortSel{padding:7px 10px;border-radius:7px;border:1px solid #e2e2e2;background:#fff;color:var(--ink)}
+#expBtn{padding:7px 12px;border-radius:6px;border:none;background:#1a1a1a;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap}
+#expBtn:hover{background:#000}
+#langBtn{padding:7px 12px;border-radius:7px;border:1px solid var(--accent);background:#fff;color:var(--accent);font-weight:700;cursor:pointer}
+#langBtn:hover{background:var(--accent);color:#fff}
+.wm{font-size:21px;font-weight:800;letter-spacing:-.4px;line-height:1}
+#brandT{color:var(--accent)}
+.wmm{color:var(--ink)}
 #langBtn:hover{background:rgba(255,255,255,.15)}
 .search{flex:1;min-width:200px;position:relative}
-.search input{width:100%;padding:9px 12px 9px 34px;border-radius:8px;border:none;outline:none}
+.search input{width:100%;padding:9px 12px 9px 34px;border-radius:8px;border:1px solid #eceff3;background:#f2f4f6;outline:none;color:var(--ink)}
+.search input:focus{background:#fff;border-color:var(--accent)}
 .search svg{position:absolute;left:10px;top:9px;width:18px;height:18px;fill:var(--mut)}
 .stats{font-size:12px;opacity:.9;white-space:nowrap}
 .nav a{color:#cfe0f2;text-decoration:none;font-size:12px;margin-left:8px}
@@ -71,12 +79,82 @@ main{flex:1;min-width:0}
 .lbclose{position:absolute;top:16px;right:20px;font-size:30px;color:#fff;cursor:pointer;line-height:1}
 .season-badge{padding:2px 9px;border-radius:6px;font-size:12px;font-weight:600;color:#3a2f10}
 @media(max-width:860px){aside{position:static;width:100%;flex-basis:auto;max-height:none}.layout{flex-direction:column;padding:12px}.ftog{display:block;margin:0 0 6px;width:100%;padding:9px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;font-weight:600}aside.collapsed{display:none}}
+/* --- калитка доступа и админка --- */
+#gate{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#f15a24,#ff8a45);display:flex;align-items:center;justify-content:center;padding:20px}
+#gate.hidden{display:none}
+.gbox{background:#fff;border-radius:16px;padding:28px 26px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center}
+.gbox h1{margin:0 0 4px;font-size:24px;font-weight:800;color:#f15a24;letter-spacing:-.5px}
+.gbox p{margin:0 0 16px;font-size:13px;color:#6b7a8d}
+.gbox input{width:100%;padding:11px 12px;border:1px solid #cfd8e3;border-radius:9px;font-size:15px;outline:none;text-align:center}
+.gbox input:focus{border-color:#2e75b6}
+.gbox button{margin-top:12px;width:100%;padding:11px;border:none;border-radius:9px;background:#f15a24;color:#fff;font-weight:700;font-size:15px;cursor:pointer}
+.gbox button:hover{background:#d34a16}
+.gerr{color:#e53935;font-size:13px;min-height:18px;margin-top:8px}
+.gadmin{margin-top:14px;font-size:12px;color:#8aa0b8;cursor:pointer;text-decoration:underline}
+#adminBar{display:none;gap:8px;align-items:center;background:#1a1a1a;color:#fff;padding:7px 14px;font-size:13px;flex-wrap:wrap;position:sticky;top:0;z-index:30}
+#adminBar.on{display:flex}
+#adminBar b{font-weight:800;letter-spacing:.5px;color:#f15a24}
+#adminBar button{border:1px solid rgba(255,255,255,.55);background:transparent;color:#fff;border-radius:6px;padding:5px 10px;font-size:12.5px;cursor:pointer;font-weight:600}
+#adminBar button:hover{background:rgba(255,255,255,.16)}
+.editBtn{margin-top:6px;border:1px solid #f15a24;background:#fff;color:#f15a24;border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;font-weight:600}
+.editBtn:hover{background:#f15a24;color:#fff}
+#emodal{position:fixed;inset:0;z-index:900;background:rgba(15,22,30,.75);display:none;align-items:center;justify-content:center;padding:16px}
+#emodal.on{display:flex}
+.ebox{background:#fff;border-radius:14px;max-width:520px;width:100%;max-height:92vh;overflow:auto;padding:20px}
+.ebox h2{margin:0 0 14px;font-size:17px}
+.efield{margin-bottom:11px}
+.efield label{display:block;font-size:12px;color:#6b7a8d;margin-bottom:3px}
+.efield input,.efield select{width:100%;padding:8px 9px;border:1px solid #cfd8e3;border-radius:7px;font-size:14px;box-sizing:border-box}
+.echips{display:flex;flex-wrap:wrap;gap:6px}
+.echip{border:1px solid #cfd8e3;border-radius:16px;padding:5px 10px;font-size:13px;cursor:pointer;user-select:none}
+.echip.on{background:#2e75b6;color:#fff;border-color:#2e75b6}
+.erow{display:flex;gap:10px}
+.erow>div{flex:1}
+.ebtns{display:flex;gap:10px;margin-top:16px}
+.ebtns button{padding:10px;border-radius:8px;border:none;font-weight:600;cursor:pointer;font-size:14px}
+.eSave{background:#1a7f4b;color:#fff;flex:1}
+.eDel{background:#e53935;color:#fff}
+.eCancel{background:#eef2f6;color:#333;flex:1}
+
+.glogo{font-size:34px;font-weight:800;letter-spacing:-1px;color:#1a1a1a;margin-bottom:2px}
+.glogo b{color:#f15a24}
+.gtag{margin:0 0 16px;font-size:13px;color:#8a97a5}
+.gstats{display:flex;gap:16px;justify-content:center;margin:0 0 18px;font-size:11px;color:#8a97a5;text-transform:uppercase;letter-spacing:.3px}
+.gstats b{display:block;font-size:17px;color:#1a1a1a;font-weight:800;letter-spacing:0}
+.dsec{margin-bottom:14px}
+.dsec h3{margin:0 0 6px;font-size:12px;color:#6b7a8d;text-transform:uppercase;letter-spacing:.4px}
+.drow{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f0f0f0}
+.dname{flex:1;font-size:14px}
+.dcnt{font-size:12px;color:#9aa;min-width:36px;text-align:right}
+.dDel{border:none;background:#f7dede;color:#c0392b;border-radius:5px;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:1}
+.dDel:hover{background:#e74c3c;color:#fff}
+.daddrow{display:flex;gap:6px;margin-top:8px}
+.daddrow .dadd{flex:1;padding:7px 9px;border:1px solid #cfd8e3;border-radius:7px;font-size:13px}
+.dAddBtn{border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:7px;padding:0 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.dAddBtn:hover{background:var(--accent);color:#fff}
 </style>
 </head>
 <body>
+<div id="gate"><div class="gbox">
+  <div class="glogo"><b>UTV</b> media</div>
+  <p class="gtag">Вход по паролю</p>
+  <input id="gpass" type="password" placeholder="Пароль недели" autocomplete="off">
+  <div class="gerr" id="gerr"></div>
+  <button id="gbtn">Войти</button>
+  <div class="gadmin" id="gadmin">Вход для администратора</div>
+</div></div>
+<div id="adminBar">
+  <b>РЕЖИМ АДМИНА</b>
+  <button id="abAdd">+ Добавить кадр</button>
+  <button id="abDict">Справочники</button>
+  <button id="abPass">Пароль недели</button>
+  <button id="abExit">Выйти</button>
+</div>
+<div id="emodal"><div class="ebox" id="ebox"></div></div>
+
 <header>
   <div class="hrow">
-    <div class="brand"><span id="brandT">Каталог планов</span><small id="subTitle">—</small></div>
+    <div class="brand"><span class="wm"><span id="brandT">UTV</span> <span class="wmm">media</span></span><small id="subTitle">—</small></div>
     <div class="search">
       <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
       <input id="q" type="search" placeholder="Поиск планов: ролик, объект, вид…" autocomplete="off">
@@ -128,7 +206,7 @@ const SEASONS=["Зима","Весна","Лето","Осень"];
 const SEASON_COLOR={"Зима":"#dbeeff","Весна":"#dcf5dc","Лето":"#fff3c4","Осень":"#ffe0c2"};
 let CAT=null,PLANS=[],filtered=[],shown=0;const PAGE=250;
 const L18={
- ru:{brand:"Каталог планов",all:"все регионы",ph:"Поиск планов: ролик, объект, вид…",
+ ru:{brand:"UTV media",all:"все регионы",ph:"Поиск планов: ролик, объект, вид…",
   srt:{oId:"По порядку",oDurd:"Дольше сначала",oDura:"Короче сначала",oSize:"По крупности",oVideo:"По ролику"},
   exp:"⬇ Excel",expT:"Выгрузить кадры текущей выборки в Excel (без фото)",lang:"EN",langT:"Switch interface to English",
   ftog:"Фильтры ▾",hRegion:"Регион",hCountry:"Страна",hSeason:"Сезон",hFrame:"Что в кадре",hMode:"режим:",
@@ -137,7 +215,7 @@ const L18={
   empty:"В выборке нет кадров.",fname:"кадры_выборка",
   hdr:["№","Ролик","№ видео","Регион","Страна","Сезон","План №","Длительность, с","Тайм-код","Крупность","Теги","Животные/птицы"],
   cats:null,sizes:null,seasons:null},
- en:{brand:"Shot catalog",all:"all regions",ph:"Search shots: clip, subject, species…",
+ en:{brand:"UTV media",all:"all regions",ph:"Search shots: clip, subject, species…",
   srt:{oId:"Default order",oDurd:"Longest first",oDura:"Shortest first",oSize:"By shot size",oVideo:"By clip"},
   exp:"⬇ Excel",expT:"Export current selection to Excel (no photos)",lang:"RU",langT:"Вернуть русский интерфейс",
   ftog:"Filters ▾",hRegion:"Region",hCountry:"Country",hSeason:"Season",hFrame:"What is in frame",hMode:"mode:",
@@ -154,6 +232,16 @@ function LG(){return L18[state.lang]||L18.ru;}
 function dCat(k){const d=LG().cats;return (d&&d[k])||CATDISP[k]||k;}
 function dSize(x){const d=LG().sizes;return (d&&d[x])||x;}
 function dSeason(x){const d=LG().seasons;return (d&&d[x])||x;}
+var REG_EN={"Алтай":"Altai","Байкал":"Baikal","Башкортостан":"Bashkortostan","Кавказ":"Caucasus","Камчатка":"Kamchatka","Карелия":"Karelia","Кольский":"Kola Peninsula","Крым":"Crimea","Поволжье":"Volga region","Русский Север":"Russian North","Северо-Запад":"Northwest","Сибирь":"Siberia","Средняя полоса":"Central Russia","Урал":"Ural"};
+var CO_EN={"Абхазия":"Abkhazia","Австрия":"Austria","Албания":"Albania","Армения":"Armenia","Беларусь":"Belarus","Болгария":"Bulgaria","Босния и Герцеговина":"Bosnia and Herzegovina","Венгрия":"Hungary","Германия":"Germany","Греция":"Greece","Грузия":"Georgia","Египет":"Egypt","Исландия":"Iceland","Испания":"Spain","Италия":"Italy","Казахстан":"Kazakhstan","Киргизия":"Kyrgyzstan","Марокко":"Morocco","Монголия":"Mongolia","Норвегия":"Norway","Португалия":"Portugal","Россия":"Russia","Румыния":"Romania","Северная Македония":"North Macedonia","Сербия":"Serbia","Словакия":"Slovakia","Словения":"Slovenia","Таджикистан":"Tajikistan","Таиланд":"Thailand","Турция":"Turkey","Филиппины":"Philippines","Франция":"France","Хорватия":"Croatia","Черногория":"Montenegro","Чехия":"Czechia","Швейцария":"Switzerland","Шри-Ланка":"Sri Lanka"};
+function dRegion(x){return state.lang==="en"?(REG_EN[x]||x):x;}
+function dCountry(x){return state.lang==="en"?(CO_EN[x]||x):x;}
+var TR={"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"e","ж":"zh","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"kh","ц":"ts","ч":"ch","ш":"sh","щ":"shch","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya"};
+function translit(str){return String(str).replace(/[а-яё]/gi,function(ch){var low=ch.toLowerCase();var t=TR[low];if(t===undefined)return ch;return ch===low?t:(t.charAt(0).toUpperCase()+t.slice(1));});}
+function cleanName(v){return String(v).replace(/_?NO[_ ]?TITLE/gi,"").replace(/_+$/,"").trim();}
+function dName(v){v=cleanName(v);return state.lang==="en"?translit(v):v;}
+var SP_EN={"бабочка":"Butterfly","бабочка (ленточник)":"Butterfly (white admiral)","бабочка (репейница)":"Butterfly (painted lady)","божья коровка":"Ladybug","коровы":"Cows","коровы (стадо)":"Cows (herd)","красотка-девушка (стрекоза)":"Banded demoiselle (dragonfly)","лошади":"Horses","муравьи (муравейник)":"Ants (anthill)","мышь (мышонок)":"Mouse","овцы":"Sheep","ондатра":"Muskrat","полевая мышь":"Field mouse","пчёлы (рой)":"Bees (swarm)","стрекоза":"Dragonfly","стрекоза (добыча)":"Dragonfly (prey)","суслики":"Ground squirrels","уж":"Grass snake","улитка":"Snail","червонец огненный (бабочка)":"Scarce copper (butterfly)","агама":"Agama","бабочка (бархатница)":"Butterfly (satyr)","бабочка, кузнечик":"Butterfly, grasshopper","белка":"Squirrel","белки":"Squirrels","бобр":"Beaver","бобры":"Beavers","бурый медведь":"Brown bear","горный козёл (тур)":"Mountain goat (tur)","гусеница":"Caterpillar","жаба и бабочка":"Toad and butterfly","животное":"Animal","жук":"Beetle","зубры":"Bisons","краб":"Crab","крокодилы":"Crocodiles","кузнечик":"Grasshopper","лошади, овцы":"Horses, sheep","лошадь":"Horse","лягушки":"Frogs","майский жук":"Cockchafer","моллюски":"Molluscs","морские звёзды":"Starfish","оса":"Wasp","рыба":"Fish","рыба (форель)":"Fish (trout)","рыба-клоун":"Clownfish","рыбы":"Fish","саламандра":"Salamander","слоны":"Elephants","стрекоза, шмель":"Dragonfly, bumblebee","сурки":"Marmots","сурок":"Marmot","суслик":"Ground squirrel","уж, божья коровка":"Grass snake, ladybug","утки":"Ducks","ящерица":"Lizard","белоспинный дятел":"White-backed woodpecker","большой пёстрый дятел":"Great spotted woodpecker","варакушка":"Bluethroat","водоплавающие птицы (вид не определён)":"Waterfowl (species undetermined)","гуси":"Geese","длиннохвостая неясыть":"Ural owl","дрозд-рябинник":"Fieldfare","дрозд-рябинник (гнездо с птенцами)":"Fieldfare (nest with chicks)","дрозд-рябинник (гнездо)":"Fieldfare (nest)","жёлтая трясогузка":"Yellow wagtail","зарянка":"European robin","золотистая щурка":"European bee-eater","кряквы":"Mallards","лебеди":"Swans","лебеди, утки":"Swans, ducks","лебедь-шипун":"Mute swan","луговой чекан":"Whinchat","озёрная чайка":"Black-headed gull","озёрная чайка; гнездо":"Black-headed gull; nest","перевозчик":"Common sandpiper","поползень":"Nuthatch","птица (вид не определён)":"Bird (species undetermined)","садовая камышовка":"Blyth's reed warbler","седоголовый дятел":"Grey-headed woodpecker","соловей":"Nightingale","трясогузка":"Wagtail","трёхпалый дятел":"Three-toed woodpecker","утки (вид не определён)":"Ducks (species undetermined)","ходулочник":"Black-winged stilt","цапля (предположительно белая)":"Heron (probably egret)","чайка":"Gull","чайки":"Gulls","черношейная поганка":"Black-necked grebe","чибис":"Lapwing","чомга (большая поганка)":"Great crested grebe","чёрный дятел (желна)":"Black woodpecker","широконоска, чирок-трескунок":"Northern shoveler, garganey","ястреб-перепелятник":"Sparrowhawk","баклан":"Cormorant","бакланы":"Cormorants","береговая ласточка (береговушка)":"Sand martin","большая поганка (чомга), лысуха":"Great crested grebe, coot","зяблик":"Chaffinch","канюк (хищная птица)":"Buzzard (bird of prey)","крачка":"Tern","кряква":"Mallard","кряква, лебедь":"Mallard, swan","лебедь":"Swan","лебедь, кряква":"Swan, mallard","лебедь, кряква, серая цапля":"Swan, mallard, grey heron","лебедь-кликун":"Whooper swan","мелкие птицы":"Small birds","павлин":"Peacock","певчий дрозд":"Song thrush","певчий дрозд, чёрный дрозд":"Song thrush, blackbird","птица":"Bird","птицы":"Birds","речная крачка":"Common tern","свиристель":"Waxwing","серая цапля":"Grey heron","серая цапля, лебедь-шипун, кряква":"Grey heron, mute swan, mallard","синица":"Tit","утка":"Duck","ушастые совы":"Long-eared owls","фламинго":"Flamingo","хищная птица":"Bird of prey","чёрный дрозд, зяблик, певчий дрозд":"Blackbird, chaffinch, song thrush"};
+function dSpecies(v){if(!v)return "";return state.lang==="en"?(SP_EN[String(v).toLowerCase()]||translit(v)):v;}
 function tc(sec){sec=Math.max(0,Math.round(sec));const m=Math.floor(sec/60),r=sec%60;return m+":"+String(r).padStart(2,"0");}
 function setTxt(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
 function applyLang(){
@@ -175,7 +263,7 @@ function updStats(){const L=LG();const e=document.getElementById("stats");
 let state={q:"",regions:new Set(),countries:new Set(),seasons:new Set(),cats:new Set(),sizes:new Set(),mode:"and",sort:"id",lang:"ru"};
 function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
 function hl(s){s=esc(s);const q=state.q.trim();if(!q)return s;try{const rx=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig");return s.replace(rx,"<mark>$1</mark>");}catch(e){return s;}}
-function fmtDur(sec){const m=Math.floor(sec/60),s=Math.round(sec%60);return m?(m+":"+String(s).padStart(2,"0")):(Math.round(sec)+"с");}
+function fmtDur(sec){const m=Math.floor(sec/60),s=Math.round(sec%60);return m?(m+":"+String(s).padStart(2,"0")):(Math.round(sec)+LG().s);}
 function fmtTotal(sec){const L=LG();sec=Math.round(sec);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;const p=[];if(h)p.push(h+" "+L.h);if(m)p.push(m+" "+L.m);p.push(s+" "+L.s);return p.join(" ");}
 function loadCatalogs(){
   const list=window.SHOTS_MANIFEST||[];
@@ -194,30 +282,33 @@ function bindUI(list){
   document.getElementById("langBtn").addEventListener("click",function(){state.lang=(state.lang==="ru"?"en":"ru");applyLang();});
   const io=new IntersectionObserver(es=>{if(es[0].isIntersecting)more();},{rootMargin:"600px"});
   io.observe(document.getElementById("sentinel"));
+  document.getElementById("grid").addEventListener("click",function(e){var b=e.target.closest(".editBtn");if(b)openEdit(+b.dataset.edit);});
   if(window.innerWidth<=860)document.getElementById("filters").classList.add("collapsed");
 }
 function setMode(m){state.mode=m;document.getElementById("mAnd").classList.toggle("on",m==="and");document.getElementById("mOr").classList.toggle("on",m==="or");render();}
 function resetFilters(){state.q="";state.regions.clear();state.countries.clear();state.seasons.clear();state.cats.clear();state.sizes.clear();document.getElementById("q").value="";buildFilters();render();}
 function buildCombined(){
+  applyCustomTags();
   const cats=window.SHOTS_CATALOGS||{};
   const ids=(window.SHOTS_MANIFEST||[]).map(m=>m.id).filter(id=>cats[id]);
   let plans=[],videos=0,dur=0;
   ids.forEach(id=>{const c=cats[id];(c.plans||[]).forEach(p=>plans.push(p));videos+=c.videos||0;dur+=c.dur||0;});
   CAT={title:"все регионы",plans:plans,videos:videos,dur:dur};PLANS=plans;
+  applyAdminOverrides();
   document.getElementById("subTitle").textContent=LG().all;
-  PLANS.forEach(p=>{const parts=[p.vname,p.season,p.region,p.country,p.animal||"",p.bird||"",p.size];p.tags.forEach(k=>parts.push(CATDISP[k]||k));p._s=parts.join(" ").toLowerCase();});
+  PLANS.forEach(p=>{const parts=[p.vname,p.season,p.region,p.country,p.animal||"",p.bird||"",p.size];p.tags.forEach(k=>parts.push(CATDISP[k]||k));parts.push(REG_EN[p.region]||"",CO_EN[p.country]||"",(L18.en.seasons&&L18.en.seasons[p.season])||"",(L18.en.sizes&&L18.en.sizes[p.size])||"",translit(p.vname),(SP_EN[(p.animal||"").toLowerCase()]||""),(SP_EN[(p.bird||"").toLowerCase()]||""));p.tags.forEach(k=>parts.push((L18.en.cats&&L18.en.cats[k])||""));p._s=parts.join(" ").toLowerCase();});
   state.regions.clear();state.countries.clear();state.seasons.clear();state.cats.clear();state.sizes.clear();
   buildFilters();render();
-  TOTV=videos;TOTD=dur;updStats();
+  TOTV=uniqueVideos(PLANS);TOTD=totalDur(PLANS);updStats();
 }
 function cntP(fn){let n=0;for(const p of PLANS)if(fn(p))n++;return n;}
 function buildFilters(){
   const fR=document.getElementById("fRegion");fR.innerHTML="";
   const regs=[...new Set(PLANS.map(p=>p.region))].sort((a,b)=>a.localeCompare(b,"ru"));
-  regs.forEach(rg=>{const n=cntP(p=>p.region===rg);if(n)fR.appendChild(mkTog(rg,n,state.regions,rg));});
+  regs.forEach(rg=>{const n=cntP(p=>p.region===rg);if(n)fR.appendChild(mkTog(dRegion(rg),n,state.regions,rg));});
   const fCo=document.getElementById("fCountry");fCo.innerHTML="";
   const cos=[...new Set(PLANS.map(p=>p.country))].sort((a,b)=>a.localeCompare(b,"ru"));
-  cos.forEach(co=>{const n=cntP(p=>p.country===co);if(n)fCo.appendChild(mkTog(co,n,state.countries,co));});
+  cos.forEach(co=>{const n=cntP(p=>p.country===co);if(n)fCo.appendChild(mkTog(dCountry(co),n,state.countries,co));});
   const fS=document.getElementById("fSeason");fS.innerHTML="";
   SEASONS.forEach(s=>{const n=cntP(p=>p.season===s);if(n)fS.appendChild(mkTog(dSeason(s),n,state.seasons,s));});
   const fC=document.getElementById("fCats");fC.innerHTML="";
@@ -247,14 +338,15 @@ function sortP(a){const s=state.sort,arr=a.slice();
   return arr;}
 function chipsHTML(p){return p.tags.map(k=>'<span class="chip" style="--c:'+(CATCOLOR[k]||"#888")+'">'+esc(dCat(k))+'</span>').join("");}
 function cellHTML(p,i){
-  const sp=(p.bird?'<div class="sp">🐦 '+esc(p.bird)+'</div>':'')+(p.animal?'<div class="sp">🐾 '+esc(p.animal)+'</div>':'');
+  const sp=(p.bird?'<div class="sp">🐦 '+esc(dSpecies(p.bird))+'</div>':'')+(p.animal?'<div class="sp">🐾 '+esc(dSpecies(p.animal))+'</div>':'');
   return '<figure class="cell" data-i="'+i+'" style="--sc:'+(SEASON_COLOR[p.season]||"#ccc")+'">'+
     '<img loading="lazy" src="'+esc(p.img)+'" alt="">'+
     '<figcaption class="cap">'+
       '<div class="capr"><span class="sz" style="color:'+(SIZE_COLOR[p.size]||"#333")+'">'+esc(dSize(p.size))+'</span>'+
-      '<span class="tm">'+p.t0+'–'+p.t1+'с</span><span class="dur">'+fmtDur(p.dur)+'</span></div>'+
+      '<span class="tm">'+p.t0+'–'+p.t1+LG().s+'</span><span class="dur">'+fmtDur(p.dur)+'</span></div>'+
       '<div class="tgs">'+chipsHTML(p)+'</div>'+sp+
-      '<div class="vn">📍 '+esc(p.region)+' · #'+p.vid+' '+hl(p.vname)+'</div>'+
+      '<div class="vn">📍 '+esc(dRegion(p.region))+' · #'+p.vid+' '+hl(dName(p.vname))+'</div>'+
+      (ADMIN?'<button class="editBtn" data-edit="'+i+'">✎ '+(state.lang==="en"?"edit":"править")+'</button>':'')+
     '</figcaption></figure>';
 }
 function render(){
@@ -289,8 +381,8 @@ function exportXls(){
   let t='<table border="1"><tr>'+L.hdr.map(h=>'<th>'+esc(h)+'</th>').join("")+'</tr>';
   filtered.forEach(function(p,i){
     const tags=p.tags.map(k=>dCat(k)).join(", ");
-    const sp=[p.animal||"",p.bird||""].filter(Boolean).join(", ");
-    const cells=[i+1,p.vname,p.vid,p.region,p.country,dSeason(p.season),p.sn,
+    const sp=[dSpecies(p.animal),dSpecies(p.bird)].filter(Boolean).join(", ");
+    const cells=[i+1,p.vname,p.vid,dRegion(p.region),dCountry(p.country),dSeason(p.season),p.sn,
                  Math.round(p.dur),tc(p.t0)+"-"+tc(p.t1),dSize(p.size),tags,sp];
     t+='<tr>'+cells.map(c=>'<td>'+esc(String(c))+'</td>').join("")+'</tr>';
   });
@@ -301,7 +393,159 @@ function exportXls(){
   a.download=L.fname+"_"+filtered.length+".xls";document.body.appendChild(a);a.click();
   setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
 }
-loadCatalogs();
+/* ==== ДОСТУП И АДМИНКА (клиентская защита, см. РУКОВОДСТВО) ==== */
+var WEEK_SALT="bis-2026-nature-9f3a";   /* соль генерации недельного пароля */
+var ADMIN_PASS="Utv!K7q2-medRax9";                  /* пароль администратора (временный) */
+var ADMIN=false;
+function cyrb53(str,seed){seed=seed||0;var h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0);}
+function weekId(d){d=d||new Date();var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));var day=(t.getUTCDay()+6)%7;t.setUTCDate(t.getUTCDate()-day+3);var f=new Date(Date.UTC(t.getUTCFullYear(),0,4));var w=1+Math.round(((t-f)/864e5-3+((f.getUTCDay()+6)%7))/7);return t.getUTCFullYear()+"-W"+String(w).padStart(2,"0");}
+function weekPass(d){return "utv-"+cyrb53(weekId(d)+"|"+WEEK_SALT).toString(36).slice(0,6);}
+function nextChange(){var d=new Date();var day=(d.getDay()+6)%7;var dd=new Date(d);dd.setDate(d.getDate()+(7-day));dd.setHours(0,0,0,0);return dd;}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+function unlocked(){return lsGet("bis_week")===weekId();}
+function initGate(){
+  if(location.hash==="#logout"){lsDel("bis_week");lsDel("bis_admin");location.replace(location.href.split("#")[0]);return;}
+  var wantAdmin=(location.hash==="#admin");
+  if(unlocked()&&!wantAdmin){if(lsGet("bis_admin")==="1")ADMIN=true;enter();return;}
+  document.getElementById("gbtn").addEventListener("click",tryPass);
+  document.getElementById("gpass").addEventListener("keydown",function(e){if(e.key==="Enter")tryPass();});
+  document.getElementById("gadmin").addEventListener("click",function(){
+    document.getElementById("gpass").dataset.admin="1";
+    document.getElementById("gerr").textContent="Введите пароль администратора";
+    document.getElementById("gpass").focus();
+  });
+  if(wantAdmin){document.getElementById("gpass").dataset.admin="1";document.getElementById("gerr").textContent="Введите пароль администратора";}
+  document.getElementById("gpass").focus();
+}
+function tryPass(){
+  var v=(document.getElementById("gpass").value||"").trim();
+  var adm=document.getElementById("gpass").dataset.admin==="1";
+  if(adm){
+    if(v===ADMIN_PASS){ADMIN=true;lsSet("bis_week",weekId());lsSet("bis_admin","1");enter();return;}
+    document.getElementById("gerr").textContent="Неверный пароль администратора";return;
+  }
+  if(v===ADMIN_PASS){ADMIN=true;lsSet("bis_week",weekId());lsSet("bis_admin","1");enter();return;}
+  if(v.toLowerCase()===weekPass().toLowerCase()){lsSet("bis_week",weekId());enter();return;}
+  document.getElementById("gerr").textContent="Неверный пароль";
+}
+function enter(){
+  document.getElementById("gate").classList.add("hidden");
+  if(ADMIN){
+    document.getElementById("adminBar").classList.add("on");
+    document.getElementById("abAdd").onclick=openAdd;
+    document.getElementById("abDict").onclick=openDict;
+    document.getElementById("abPass").onclick=showWeekPass;
+    document.getElementById("abExit").onclick=function(){lsDel("bis_admin");location.reload();};
+  }
+  loadCatalogs();
+}
+function showWeekPass(){var nc=nextChange();alert("Пароль этой недели:  "+weekPass()+"\nДействует до "+nc.toLocaleDateString("ru-RU")+" (00:00)\n\nРаздайте его тем, кому нужен доступ к каталогу.");}
+/* --- правки админа хранятся локально в браузере --- */
+function loadOv(){try{return JSON.parse(lsGet("bis_ov")||'{"edits":{},"del":[],"add":[],"delTags":[],"delRegions":[],"delCountries":[]}');}catch(e){return {edits:{},del:[],add:[],delTags:[],delRegions:[],delCountries:[]};}}
+var OV=loadOv();
+var TAG_PAL=["#f15a24","#00897b","#8e24aa","#5e35b1","#00acc1","#e91e63","#3949ab","#43a047","#d81b60","#6d4c41"];
+function loadCustomTags(){try{return JSON.parse(lsGet("bis_tags")||"[]");}catch(e){return [];}}
+function applyCustomTags(){loadCustomTags().forEach(function(t){if(!CATDISP[t.key]){CATS.push([t.key,t.label]);CATDISP[t.key]=t.label;CATCOLOR[t.key]=t.color||"#f15a24";}});}
+function loadCustomRegions(){try{return JSON.parse(lsGet("bis_regions")||"[]");}catch(e){return [];}}
+function loadCustomCountries(){try{return JSON.parse(lsGet("bis_countries")||"[]");}catch(e){return [];}}
+function uniq(a){return a.filter(function(v,i){return v&&a.indexOf(v)===i;});}
+function addCustomTag(v){var key=v.toLowerCase();if(!CATDISP[key]){var col=TAG_PAL[CATS.length%TAG_PAL.length];CATS.push([key,v]);CATDISP[key]=v;CATCOLOR[key]=col;var ct=loadCustomTags();ct.push({key:key,label:v,color:col});lsSet("bis_tags",JSON.stringify(ct));}return key;}
+function saveOv(){try{localStorage.setItem("bis_ov",JSON.stringify(OV));}catch(e){alert("Не удалось сохранить правки: хранилище браузера переполнено.");}}
+function applyAdminOverrides(){
+  var del={};(OV.del||[]).forEach(function(g){del[g]=1;});
+  PLANS=PLANS.filter(function(p){return !del[p.gid];});
+  var ed=OV.edits||{};
+  PLANS.forEach(function(p){var e=ed[p.gid];if(e)for(var k in e)p[k]=e[k];});
+  (OV.add||[]).forEach(function(p){PLANS.push(p);});
+  var dT=OV.delTags||[],dR=OV.delRegions||[],dC=OV.delCountries||[];
+  if(dT.length||dR.length||dC.length){PLANS.forEach(function(p){
+    if(dT.length)p.tags=(p.tags||[]).filter(function(t){return dT.indexOf(t)<0;});
+    if(dR.indexOf(p.region)>=0)p.region="—";
+    if(dC.indexOf(p.country)>=0)p.country="—";
+  });}
+}
+function uniqueVideos(a){var s={};a.forEach(function(p){s[p.region+"|"+p.vid+"|"+p.vname]=1;});return Object.keys(s).length;}
+function totalDur(a){var s=0;a.forEach(function(p){s+=(+p.dur||0);});return s;}
+/* --- модал редактирования --- */
+var editTags={};
+function fld(label,id,val){return '<div class="efield"><label>'+esc(label)+'</label><input id="'+id+'" value="'+esc(val)+'"></div>';}
+function fldList(label,id,val,list){return '<div class="efield"><label>'+esc(label)+'</label><input id="'+id+'" value="'+esc(val)+'" list="'+list+'"></div>';}
+function optsFrom(a){return a.map(function(v){return '<option value="'+esc(v)+'"></option>';}).join("");}
+function selF(label,id,opts,val){return '<div class="efield"><label>'+esc(label)+'</label><select id="'+id+'">'+opts.map(function(o){return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';}).join("")+'</select></div>';}
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():"";}
+function openEdit(i){var p=filtered[i];if(!p)return;renderEdit(p,false);document.getElementById("emodal").classList.add("on");}
+function openAdd(){var p={gid:"new-"+Date.now(),vid:0,sn:1,vname:"Новый ролик",region:"",country:"",season:"Лето",t0:0,t1:0,dur:0,size:"Общий",tags:[],animal:"",bird:"",img:""};renderEdit(p,true);document.getElementById("emodal").classList.add("on");}
+function renderEdit(p,isNew){
+  editTags={};(p.tags||[]).forEach(function(t){editTags[t]=1;});
+  var box=document.getElementById("ebox");box.onclick=null;
+  var _r={},_c={};(PLANS||[]).forEach(function(x){_r[x.region]=1;_c[x.country]=1;});
+  var dlists='<datalist id="regionList">'+optsFrom(uniq(Object.keys(_r).concat(loadCustomRegions())))+'</datalist><datalist id="countryList">'+optsFrom(uniq(Object.keys(_c).concat(loadCustomCountries())))+'</datalist>';
+  box.innerHTML='<h2>'+(isNew?"Новый кадр":"Кадр #"+p.gid)+'</h2>'+
+    fld("Ролик","e_vname",p.vname)+
+    '<div class="erow"><div>'+fld("№ видео","e_vid",p.vid)+'</div><div>'+fld("План № в ролике","e_sn",p.sn)+'</div></div>'+
+    '<div class="erow"><div>'+fldList("Регион","e_region",p.region,"regionList")+'</div><div>'+fldList("Страна","e_country",p.country,"countryList")+'</div></div>'+
+    '<div class="erow"><div>'+selF("Сезон","e_season",SEASONS,p.season)+'</div><div>'+selF("Крупность","e_size",SIZE_ORDER,p.size)+'</div></div>'+
+    '<div class="erow"><div>'+fld("Начало, с","e_t0",p.t0)+'</div><div>'+fld("Конец, с","e_t1",p.t1)+'</div></div>'+
+    '<div class="efield"><label>Теги</label><div class="echips" id="e_tags"></div>'+
+    '<div style="display:flex;gap:6px;margin-top:7px"><input id="e_newtag" placeholder="добавить свой тег" style="flex:1"><button type="button" class="eCancel" id="e_addtag" style="flex:0 0 auto;padding:8px 12px">+ тег</button></div></div>'+
+    '<div class="erow"><div>'+fld("Животное","e_animal",p.animal||"")+'</div><div>'+fld("Птица","e_bird",p.bird||"")+'</div></div>'+
+    '<div class="ebtns"><button class="eSave" id="e_save">Сохранить</button>'+(isNew?'':'<button class="eDel" id="e_del">Удалить</button>')+'<button class="eCancel" id="e_cancel">Отмена</button></div>'+dlists;
+  renderTagChips();
+  document.getElementById("e_addtag").onclick=addNewTag;
+  document.getElementById("e_save").onclick=function(){saveEdit(p,isNew);};
+  document.getElementById("e_cancel").onclick=closeEdit;
+  var del=document.getElementById("e_del");if(del)del.onclick=function(){deleteEdit(p);};
+}
+function saveEdit(p,isNew){
+  var t0=+gv("e_t0")||0,t1=+gv("e_t1")||0;
+  var obj={vname:gv("e_vname"),vid:+gv("e_vid")||0,sn:+gv("e_sn")||1,region:gv("e_region"),country:gv("e_country"),season:gv("e_season"),size:gv("e_size"),t0:t0,t1:t1,dur:Math.max(0,t1-t0),tags:Object.keys(editTags),animal:gv("e_animal"),bird:gv("e_bird")};
+  if(isNew){obj.gid=p.gid;obj.img=p.img||"";OV.add.push(obj);}
+  else{OV.edits[p.gid]=Object.assign(OV.edits[p.gid]||{},obj);}
+  saveOv();closeEdit();buildCombined();
+}
+function deleteEdit(p){
+  if(!confirm("Удалить кадр #"+p.gid+"?"))return;
+  if(String(p.gid).indexOf("new-")===0){OV.add=OV.add.filter(function(x){return x.gid!==p.gid;});}
+  else{if(OV.del.indexOf(p.gid)<0)OV.del.push(p.gid);delete OV.edits[p.gid];}
+  saveOv();closeEdit();buildCombined();
+}
+function closeEdit(){document.getElementById("emodal").classList.remove("on");}
+function renderTagChips(){var tw=document.getElementById("e_tags");tw.innerHTML="";CATS.forEach(function(pair){var k=pair[0];var c=document.createElement("span");c.className="echip"+(editTags[k]?" on":"");c.textContent=CATDISP[k];c.onclick=function(){if(editTags[k])delete editTags[k];else editTags[k]=1;c.classList.toggle("on");};tw.appendChild(c);});}
+function addNewTag(){var el=document.getElementById("e_newtag");var v=(el.value||"").trim();if(!v)return;editTags[addCustomTag(v)]=1;el.value="";renderTagChips();}
+function tagCounts(){var m={};PLANS.forEach(function(p){(p.tags||[]).forEach(function(t){m[t]=(m[t]||0)+1;});});return m;}
+function fieldCounts(f){var m={};PLANS.forEach(function(p){m[p[f]]=(m[p[f]]||0)+1;});return m;}
+function dictRow(kind,key,label,cnt){return '<div class="drow"><span class="dname">'+esc(label)+'</span><span class="dcnt">'+cnt+'</span><button class="dDel" data-kind="'+kind+'" data-key="'+esc(key)+'">\u2715</button></div>';}
+function dictAddRow(kind){return '<div class="daddrow"><input class="dadd" data-kind="'+kind+'" placeholder="добавить…"><button class="dAddBtn" data-kind="'+kind+'">+ добавить</button></div>';}
+function openDict(){
+  var box=document.getElementById("ebox");box.onclick=null;
+  var tc=tagCounts(),rc=fieldCounts("region"),cc=fieldCounts("country");
+  var tags=CATS.map(function(pr){return dictRow("tag",pr[0],CATDISP[pr[0]],tc[pr[0]]||0);}).join("");
+  var regs=uniq(Object.keys(rc).concat(loadCustomRegions())).sort(function(a,b){return a.localeCompare(b,"ru");}).map(function(v){return dictRow("reg",v,v,rc[v]||0);}).join("");
+  var cous=uniq(Object.keys(cc).concat(loadCustomCountries())).sort(function(a,b){return a.localeCompare(b,"ru");}).map(function(v){return dictRow("cou",v,v,cc[v]||0);}).join("");
+  box.innerHTML='<h2>Справочники</h2>'+'<div class="dsec"><h3>Теги</h3><div>'+tags+'</div>'+dictAddRow("tag")+'</div>'+'<div class="dsec"><h3>Регионы</h3><div>'+regs+'</div>'+dictAddRow("reg")+'</div>'+'<div class="dsec"><h3>Страны</h3><div>'+cous+'</div>'+dictAddRow("cou")+'</div>'+'<div class="ebtns"><button class="eCancel" id="d_close">Закрыть</button></div>';
+  document.getElementById("d_close").onclick=closeEdit;
+  box.onclick=function(e){var d=e.target.closest(".dDel");if(d){dictDelete(d.getAttribute("data-kind"),d.getAttribute("data-key"));return;}var a=e.target.closest(".dAddBtn");if(a){var inp=box.querySelector('.dadd[data-kind="'+a.getAttribute("data-kind")+'"]');dictAdd(a.getAttribute("data-kind"),(inp.value||"").trim());return;}};
+  document.getElementById("emodal").classList.add("on");
+}
+function dictAdd(kind,v){if(!v)return;if(kind==="tag"){addCustomTag(v);}else if(kind==="reg"){var l=loadCustomRegions();if(l.indexOf(v)<0){l.push(v);lsSet("bis_regions",JSON.stringify(l));}}else if(kind==="cou"){var l=loadCustomCountries();if(l.indexOf(v)<0){l.push(v);lsSet("bis_countries",JSON.stringify(l));}}buildCombined();openDict();}
+function dictDelete(kind,key){if(!OV.delTags)OV.delTags=[];if(!OV.delRegions)OV.delRegions=[];if(!OV.delCountries)OV.delCountries=[];
+  if(kind==="tag"){var c=tagCounts()[key]||0;if(!confirm('Удалить тег «'+(CATDISP[key]||key)+'»'+(c?(' из '+c+' кадров'):'')+'?'))return;if(OV.delTags.indexOf(key)<0)OV.delTags.push(key);lsSet("bis_tags",JSON.stringify(loadCustomTags().filter(function(t){return t.key!==key;})));}
+  else if(kind==="reg"){var c=fieldCounts("region")[key]||0;if(!confirm('Удалить регион «'+key+'»'+(c?(' (в '+c+' кадрах будет «—»)'):'')+'?'))return;if(OV.delRegions.indexOf(key)<0)OV.delRegions.push(key);lsSet("bis_regions",JSON.stringify(loadCustomRegions().filter(function(x){return x!==key;})));}
+  else if(kind==="cou"){var c=fieldCounts("country")[key]||0;if(!confirm('Удалить страну «'+key+'»'+(c?(' (в '+c+' кадрах будет «—»)'):'')+'?'))return;if(OV.delCountries.indexOf(key)<0)OV.delCountries.push(key);lsSet("bis_countries",JSON.stringify(loadCustomCountries().filter(function(x){return x!==key;})));}
+  saveOv();buildCombined();openDict();}
+/* --- экспорт всего в JSON --- */
+function planToJSON(p){return {gid:p.gid,region:p.region,country:p.country,vid:p.vid,plan_no:p.sn,vname:p.vname,season:p.season,t0:p.t0,t1:p.t1,dur:p.dur,size:p.size,tags:p.tags,animal:p.animal||"",bird:p.bird||"",img:p.img};}
+function exportAllJSON(){
+  var out=PLANS.map(planToJSON);
+  var text=JSON.stringify(out,null,1);
+  var b=new Blob([text],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="каталог_кадры_"+out.length+".json";
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
+}
+
+initGate();
 </script>
 </body>
 </html>

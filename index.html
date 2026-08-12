@@ -135,6 +135,13 @@ main{flex:1;min-width:0}
 .daddrow .dadd{flex:1;padding:7px 9px;border:1px solid #cfd8e3;border-radius:7px;font-size:13px}
 .dAddBtn{border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:7px;padding:0 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 .dAddBtn:hover{background:var(--accent);color:#fff}
+.facet{border-bottom:1px solid #eef0f2}
+.facet:last-of-type{border-bottom:none}
+.facet h3{cursor:pointer;display:flex;align-items:center;justify-content:space-between;margin:0;padding:11px 2px}
+.facet h3::after{content:"▾";font-size:10px;color:var(--mut);transition:transform .15s}
+.facet.collapsed h3::after{transform:rotate(-90deg)}
+.facet.collapsed .fbody{display:none}
+.fbody{padding-bottom:10px}
 </style>
 </head>
 <body>
@@ -177,16 +184,11 @@ main{flex:1;min-width:0}
 <div class="layout">
   <button class="ftog" id="ftog">Фильтры ▾</button>
   <aside id="filters">
-    <h3 id="hRegion">Регион</h3><div class="fg" id="fRegion"></div>
-    <h3 id="hCountry">Страна</h3><div class="fg" id="fCountry"></div>
-    <h3 id="hSeason">Сезон</h3><div class="fg" id="fSeason"></div>
-    <h3 id="hFrame">Что в кадре</h3>
-    <div class="modeRow"><span class="lbl" id="hMode">режим:</span>
-      <span class="mode on" data-mode="and" id="mAnd">И (все)</span>
-      <span class="mode" data-mode="or" id="mOr">ИЛИ (любое)</span>
-    </div>
-    <div class="fg" id="fCats"></div>
-    <h3 id="hSize">Крупность плана</h3><div class="fg" id="fSizes"></div>
+    <div class="facet collapsed"><h3 id="hRegion">Регион</h3><div class="fbody"><div class="fg" id="fRegion"></div></div></div>
+    <div class="facet collapsed"><h3 id="hCountry">Страна</h3><div class="fbody"><div class="fg" id="fCountry"></div></div></div>
+    <div class="facet collapsed"><h3 id="hSeason">Сезон</h3><div class="fbody"><div class="fg" id="fSeason"></div></div></div>
+    <div class="facet collapsed"><h3 id="hFrame">Что в кадре</h3><div class="fbody"><div class="modeRow"><span class="lbl" id="hMode">режим:</span><span class="mode on" data-mode="and" id="mAnd">И (все)</span><span class="mode" data-mode="or" id="mOr">ИЛИ (любое)</span></div><div class="fg" id="fCats"></div></div></div>
+    <div class="facet collapsed"><h3 id="hSize">Крупность плана</h3><div class="fbody"><div class="fg" id="fSizes"></div></div></div>
     <button class="reset" id="reset">Сбросить фильтры</button>
   </aside>
   <main>
@@ -766,6 +768,12 @@ function exportXls(){
   setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
 }
 
+/* ==== строка статистики без числа роликов ==== */
+function updStats(){var L=LG();var e=document.getElementById("stats");if(e)e.textContent=PLANS.length+" "+L.statP+" · "+(TOTD/3600).toFixed(1)+" "+L.statH;}
+/* ==== фильтры-аккордеон: клик по заголовку сворачивает/разворачивает ==== */
+(function(){var f=document.getElementById("filters");if(f)f.addEventListener("click",function(e){var h3=e.target.closest("h3");if(h3&&h3.parentNode&&h3.parentNode.classList.contains("facet"))h3.parentNode.classList.toggle("collapsed");});})();
+
+L18.ru.brand="UTV";L18.en.brand="UTV";
 initGate();
 </script>
 </body>

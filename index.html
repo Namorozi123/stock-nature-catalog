@@ -693,6 +693,79 @@ function dictDelete(kind,key){if(!OV.delTags)OV.delTags=[];if(!OV.delRegions)OV.
 }
 document.addEventListener("click",function(e){var c=e.target&&e.target.closest?e.target.closest(".afchip"):null;if(!c)return;var k=c.getAttribute("data-k"),v=c.getAttribute("data-v");if(k==="reg")state.regions.delete(v);else if(k==="cou")state.countries.delete(v);else if(k==="sea")state.seasons.delete(v);else if(k==="cat")state.cats.delete(v);else if(k==="siz")state.sizes.delete(v);else if(k==="q"){state.q="";var qq=document.getElementById("q");if(qq)qq.value="";}buildFilters();render();});
 
+/* ==== ПРАВКИ: чистая подпись, Excel со скринами, динамические фильтры ==== */
+function clientName(v){v=hideAuthor(cleanName(v));v=v.replace(/_+/g," ").replace(/\b\d{2}[-.]\d{2}[-.]\d{2,4}\b/g," ").replace(/#\s*\d+/g," ").replace(/(^|\s)\d{1,3}(?=\s|$)/g," ").replace(/\s{2,}/g," ").replace(/^[ ·\-]+|[ ·\-]+$/g,"").trim();return v||hideAuthor(cleanName(v));}
+function dClient(v){var n=clientName(v);return state.lang==="en"?translit(n):n;}
+function dNameExport(v){v=hideAuthor(cleanName(v));return state.lang==="en"?translit(v):v;}
+function cellHTML(p,i){
+  var sp=(p.bird?'<div class="sp">🐦 '+esc(dSpecies(p.bird))+'</div>':'')+(p.animal?'<div class="sp">🐾 '+esc(dSpecies(p.animal))+'</div>':'');
+  var loc=(p.region==="—")?"":(esc(dRegion(p.region))+" ");
+  return '<figure class="cell" data-i="'+i+'" style="--sc:'+(SEASON_COLOR[p.season]||"#ccc")+'">'+
+    '<img loading="lazy" src="'+esc(p.img)+'" alt="">'+
+    '<figcaption class="cap">'+
+      '<div class="vn">📍 '+loc+hl(dClient(p.vname))+'</div>'+
+      '<div class="tgs">'+chipsHTML(p)+'</div>'+sp+
+      '<div class="capr" style="margin-top:7px;padding-top:7px;border-top:1px solid #f0f0f0"><span class="sz" style="color:'+(SIZE_COLOR[p.size]||"#333")+'">'+esc(dSize(p.size))+'</span>'+
+      '<span class="tm">'+p.t0+'–'+p.t1+LG().s+'</span><span class="dur">'+fmtDur(p.dur)+'</span></div>'+
+      (ADMIN?'<button class="editBtn" data-edit="'+i+'">✎ '+(state.lang==="en"?"edit":"править")+'</button>':'')+
+    '</figcaption></figure>';
+}
+/* динамические фильтры: счётчики с учётом текущей выборки (кроме своего фасета) */
+function filterExcept(except){
+  return PLANS.filter(function(p){
+    if(except!=="reg"&&state.regions.size&&!state.regions.has(p.region))return false;
+    if(except!=="cou"&&state.countries.size&&!state.countries.has(p.country))return false;
+    if(except!=="sea"&&state.seasons.size&&!state.seasons.has(p.season))return false;
+    if(except!=="siz"&&state.sizes.size&&!state.sizes.has(p.size))return false;
+    if(except!=="cat"&&state.cats.size){
+      if(state.mode==="and"){var ok=true;state.cats.forEach(function(c){if(p.tags.indexOf(c)<0)ok=false;});if(!ok)return false;}
+      else{var any=false;state.cats.forEach(function(c){if(p.tags.indexOf(c)>=0)any=true;});if(!any)return false;}
+    }
+    var q=state.q.trim().toLowerCase();if(q&&p._s.indexOf(q)<0)return false;
+    return true;
+  });
+}
+function buildFilters(){
+  var bR=filterExcept("reg"),bC=filterExcept("cou"),bS=filterExcept("sea"),bK=filterExcept("cat"),bZ=filterExcept("siz");
+  function cnt(arr,fn){var n=0;for(var i=0;i<arr.length;i++)if(fn(arr[i]))n++;return n;}
+  var fR=document.getElementById("fRegion");fR.innerHTML="";
+  Array.from(new Set(PLANS.map(function(p){return p.region;}))).sort(function(a,b){return a.localeCompare(b,"ru");}).forEach(function(rg){var n=cnt(bR,function(p){return p.region===rg;});if(n||state.regions.has(rg))fR.appendChild(mkTog(dRegion(rg),n,state.regions,rg));});
+  var fCo=document.getElementById("fCountry");fCo.innerHTML="";
+  Array.from(new Set(PLANS.map(function(p){return p.country;}))).sort(function(a,b){return a.localeCompare(b,"ru");}).forEach(function(co){var n=cnt(bC,function(p){return p.country===co;});if(n||state.countries.has(co))fCo.appendChild(mkTog(dCountry(co),n,state.countries,co));});
+  var fS=document.getElementById("fSeason");fS.innerHTML="";
+  SEASONS.forEach(function(s){var n=cnt(bS,function(p){return p.season===s;});if(n||state.seasons.has(s))fS.appendChild(mkTog(dSeason(s),n,state.seasons,s));});
+  var fC=document.getElementById("fCats");fC.innerHTML="";
+  CATS.forEach(function(pair){var k=pair[0];var n=cnt(bK,function(p){return p.tags.indexOf(k)>=0;});if(n||state.cats.has(k))fC.appendChild(mkTog(dCat(k),n,state.cats,k));});
+  var fZ=document.getElementById("fSizes");fZ.innerHTML="";
+  SIZE_ORDER.forEach(function(s){var n=cnt(bZ,function(p){return p.size===s;});if(n||state.sizes.has(s))fZ.appendChild(mkTog(dSize(s),n,state.sizes,s));});
+}
+function render(){
+  if(!CAT)return;buildFilters();filtered=sortP(PLANS.filter(match));shown=0;
+  var _sum=0;filtered.forEach(function(p){_sum+=p.dur;});
+  var L=LG();document.getElementById("count").innerHTML=L.found+": <b>"+filtered.length+"</b> · "+L.total+" <b>"+fmtTotal(_sum)+"</b> ("+Math.round(_sum)+" "+L.s+")";
+  document.getElementById("grid").innerHTML="";more();renderActive();updFilterUI();
+}
+/* Excel со скриншотами и без имён авторов */
+var SITE_IMG_BASE="https://bis-media.github.io/stock-nature-catalog/";
+function exportXls(){
+  var L=LG();
+  if(!filtered||!filtered.length){alert(L.empty);return;}
+  var photoHdr=state.lang==="en"?"Photo":"Скрин";
+  var t='<table border="1"><tr><th>'+photoHdr+'</th>'+L.hdr.map(function(h){return '<th>'+esc(h)+'</th>';}).join("")+'</tr>';
+  filtered.forEach(function(p,i){
+    var tags=p.tags.map(function(k){return dCat(k);}).join(", ");
+    var sp=[dSpecies(p.animal),dSpecies(p.bird)].filter(Boolean).join(", ");
+    var img='<img src="'+SITE_IMG_BASE+esc(p.img)+'" width="140" height="79">';
+    var cells=[i+1,dNameExport(p.vname),p.vid,dRegion(p.region),dCountry(p.country),dSeason(p.season),p.sn,Math.round(p.dur),tc(p.t0)+"-"+tc(p.t1),dSize(p.size),tags,sp];
+    t+='<tr><td>'+img+'</td>'+cells.map(function(c){return '<td>'+esc(String(c))+'</td>';}).join("")+'</tr>';
+  });
+  t+='</table>';
+  var doc='<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Shots</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>'+t+'</body></html>';
+  var blob=new Blob(["﻿"+doc],{type:"application/vnd.ms-excel"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=L.fname+"_"+filtered.length+".xls";document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
+}
+
 initGate();
 </script>
 </body>

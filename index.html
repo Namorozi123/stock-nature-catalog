@@ -151,7 +151,6 @@ main{flex:1;min-width:0}
   <input id="gpass" type="password" placeholder="Пароль" autocomplete="off">
   <div class="gerr" id="gerr"></div>
   <button id="gbtn">Войти</button>
-  <div class="gadmin" id="gadmin">Вход для администратора</div>
 </div></div>
 <div id="adminBar">
   <b>РЕЖИМ АДМИНА</b>
@@ -184,8 +183,8 @@ main{flex:1;min-width:0}
 <div class="layout">
   <button class="ftog" id="ftog">Фильтры ▾</button>
   <aside id="filters">
-    <div class="facet collapsed"><h3 id="hRegion">Регион</h3><div class="fbody"><div class="fg" id="fRegion"></div></div></div>
     <div class="facet collapsed"><h3 id="hCountry">Страна</h3><div class="fbody"><div class="fg" id="fCountry"></div></div></div>
+    <div class="facet collapsed"><h3 id="hRegion">Регион</h3><div class="fbody"><div class="fg" id="fRegion"></div></div></div>
     <div class="facet collapsed"><h3 id="hSeason">Сезон</h3><div class="fbody"><div class="fg" id="fSeason"></div></div></div>
     <div class="facet collapsed"><h3 id="hFrame">Что в кадре</h3><div class="fbody"><div class="modeRow"><span class="lbl" id="hMode">режим:</span><span class="mode on" data-mode="and" id="mAnd">И (все)</span><span class="mode" data-mode="or" id="mOr">ИЛИ (любое)</span></div><div class="fg" id="fCats"></div></div></div>
     <div class="facet collapsed"><h3 id="hSize">Крупность плана</h3><div class="fbody"><div class="fg" id="fSizes"></div></div></div>
@@ -774,6 +773,17 @@ function updStats(){var L=LG();var e=document.getElementById("stats");if(e)e.tex
 (function(){var f=document.getElementById("filters");if(f)f.addEventListener("click",function(e){var h3=e.target.closest("h3");if(h3&&h3.parentNode&&h3.parentNode.classList.contains("facet"))h3.parentNode.classList.toggle("collapsed");});})();
 
 L18.ru.brand="UTV";L18.en.brand="UTV";
+/* ==== окно входа без ссылки админа (админ — через #admin) ==== */
+function initGate(){
+  if(location.hash==="#logout"){lsDel("bis_acct");lsDel("bis_admin");location.replace(location.href.split("#")[0]);return;}
+  var wantAdmin=(location.hash==="#admin");
+  if(unlocked()&&!wantAdmin){if(lsGet("bis_admin")==="1")ADMIN=true;enter();return;}
+  document.getElementById("gbtn").addEventListener("click",tryPass);
+  document.getElementById("gpass").addEventListener("keydown",function(e){if(e.key==="Enter")tryPass();});
+  if(wantAdmin){document.getElementById("gpass").dataset.admin="1";document.getElementById("gerr").textContent="Введите пароль администратора";}
+  document.getElementById("gpass").focus();
+}
+
 initGate();
 </script>
 </body>
